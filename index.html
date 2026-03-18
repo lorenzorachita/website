@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Codex Digital | Leonardo da Vinci</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Montserrat:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #b08d57; /* Or antique */
+            --accent-blue: #00d4ff; /* Bleu holographique */
+            --accent-red: #e74c3c; 
+            --dark: #1a1a1a;
+            --bg-light: #fdfaf0; /* Papier vieux parchemin */
+            --white: #ffffff;
+            --text: #2d3436;
+            --glass: rgba(255, 255, 255, 0.85);
+        }
+
+        body { 
+            --bg-light: #0d0d0d; --white: #1a1a1a; --text: #e0e0e0; --primary: #d4af37; 
+            --glass: rgba(15, 15, 15, 0.95); 
+            background-color: var(--bg-light);
+            color: var(--text);
+            font-family: 'Montserrat', sans-serif;
+            transition: 0.5s;
+            overflow-x: hidden;
+            cursor: none;
+            background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+        }
+
+        body.day-mode {
+            --primary: #8e6d3d; --accent-blue: #3498db; --bg-light: #f7f1e3; 
+            --white: #ffffff; --text: #2c3e50; --glass: rgba(255, 255, 255, 0.9);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        /* Curseur Plume d'Oie */
+        #magic-cursor {
+            position: fixed; width: 12px; height: 12px; background: var(--primary); border-radius: 50%;
+            pointer-events: none; z-index: 10000; box-shadow: 0 0 15px var(--primary);
+            transform: translate(-50%, -50%);
+        }
+        .ink-splat {
+            position: fixed; width: 5px; height: 5px; background: var(--primary); border-radius: 50%;
+            pointer-events: none; z-index: 9999; animation: inkFade 1s ease-out forwards;
+        }
+        @keyframes inkFade { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(3); opacity: 0; } }
+
+        /* Nav */
+        nav { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); width: 95%; max-width: 1100px; background: var(--glass); backdrop-filter: blur(10px); padding: 15px 30px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid var(--primary); }
+        .nav-logo { font-family: 'Playfair Display'; font-style: italic; font-weight: 900; color: var(--primary); text-decoration: none; font-size: 1.5rem; }
+        .nav-links { display: flex; gap: 15px; list-style: none; }
+        .nav-links li a { text-decoration: none; color: var(--text); font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+        .nav-links li a:hover { color: var(--primary); }
+
+        /* Hero Section */
+        .hero { 
+            height: 100vh; 
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?q=80&w=2038&auto=format&fit=crop'); 
+            background-size: cover; background-position: center; 
+            display: flex; flex-direction: column; justify-content: center; align-items: center; 
+            color: white; text-align: center;
+        }
+        .hero h1 { font-family: 'Playfair Display'; font-size: clamp(2rem, 10vw, 5rem); margin-bottom: 20px; }
+        .hero p { font-size: 1.2rem; max-width: 600px; font-weight: 300; font-style: italic; }
+
+        /* Sections */
+        section { padding: 100px 10%; position: relative; }
+        .concept-box { max-width: 850px; margin: 0 auto; padding: 50px; background: var(--white); border-radius: 5px; border-left: 10px solid var(--primary); box-shadow: 20px 20px 60px rgba(0,0,0,0.4); }
+
+        /* Timeline Parchemin */
+        .timeline { position: relative; max-width: 900px; margin: 50px auto; border-left: 2px dashed var(--primary); padding-left: 30px; }
+        .timeline-item { margin-bottom: 50px; position: relative; background: var(--white); padding: 30px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .timeline-date { color: var(--primary); font-family: 'Playfair Display'; font-weight: 900; font-size: 1.4rem; display: block; margin-bottom: 10px; }
+
+        /* Rail de l'Invention (Adaptation du Coaster) */
+        .invention-track { position: relative; padding-left: 80px; margin-top: 50px; }
+        .invention-track::before { content: ''; position: absolute; left: 35px; top: 0; width: 2px; height: 100%; background: var(--primary); }
+        .flying-machine { position: absolute; left: 10px; top: 0; font-size: 3rem; z-index: 100; transition: top 0.8s cubic-bezier(0.17, 0.67, 0.83, 0.67); filter: drop-shadow(0 0 10px var(--primary)); }
+        
+        .skill-card { 
+            margin-bottom: 30px; background: var(--white); padding: 25px; border-radius: 5px; 
+            border: 1px solid rgba(176, 141, 87, 0.3); transition: 0.3s; opacity: 0; transform: translateX(20px);
+        }
+        .skill-card.visible { opacity: 1; transform: translateX(0); }
+        .skill-card h3 { color: var(--primary); font-family: 'Bungee'; font-size: 1rem; margin-bottom: 10px; }
+
+        /* Contact Ticket - Invitation à la Cour */
+        .contact-card { max-width: 600px; margin: 0 auto; background: var(--white); border: 2px solid var(--primary); padding: 50px; border-radius: 2px; position: relative; }
+        .contact-card::after { content: 'SEAL'; position: absolute; bottom: -20px; right: 20px; background: #96281b; color: white; padding: 20px; border-radius: 50%; font-family: 'Bungee'; transform: rotate(-15deg); box-shadow: 5px 5px 15px rgba(0,0,0,0.3); }
+
+        .theme-toggle { position: fixed; bottom: 30px; right: 30px; z-index: 1000; background: var(--primary); border: none; width: 60px; height: 60px; border-radius: 50%; font-size: 1.5rem; color: white; cursor: none; }
+
+        [data-reveal] { opacity: 0; transform: translateY(40px); transition: 1s ease; }
+        [data-reveal].visible { opacity: 1; transform: translateY(0); }
+
+        footer { text-align: center; padding: 50px; font-size: 0.8rem; letter-spacing: 2px; opacity: 0.6; }
+    </style>
+</head>
+<body>
+
+<div id="magic-cursor"></div>
+<button class="theme-toggle" id="themeBtn">🕯️</button>
+
+<nav>
+    <a href="#" class="nav-logo">Da Vinci 2.0</a>
+    <ul class="nav-links">
+        <li><a href="#about">Philosophie</a></li>
+        <li><a href="#codex">Mon Codex</a></li>
+        <li><a href="#engine">Ingénierie</a></li>
+        <li><a href="#contact">Correspondance</a></li>
+    </ul>
+</nav>
+
+<header class="hero">
+    <h1 data-reveal>Leonardo Da Vinci</h1>
+    <p data-reveal>Polymath, Visionnaire & Creative Technologist. <br> "Le fer se rouille faute de s'en servir, l'esprit s'atrophie faute d'exercice."</p>
+</header>
+
+<section id="about">
+    <div class="concept-box" data-reveal>
+        <h2 style="font-family: 'Playfair Display'; margin-bottom: 20px;">Le "Slasher" de la Renaissance</h2>
+        <p>Expert en observation des systèmes complexes, je ne vois aucune frontière entre l'art de peindre un sourire et la science de concevoir un parachute. Mon approche est <strong>Transdisciplinaire</strong>.</p>
+        <p style="margin-top: 15px;">Aujourd'hui, j'utilise l'IA pour décoder les mystères de l'anatomie et la réalité augmentée pour donner vie à mes machines volantes.</p>
+    </div>
+</section>
+
+<section id="codex">
+    <h2 style="text-align: center; font-family: 'Bungee'; margin-bottom: 50px; color: var(--primary);">Journal de Bord (1452 - 2026)</h2>
+    <div class="timeline">
+        <div class="timeline-item" data-reveal>
+            <span class="timeline-date">L'Origine</span>
+            <h3>Apprentissage chez Verrocchio</h3>
+            <p>Maîtrise des pigments, de la fonderie et de la perspective atmosphérique.</p>
+        </div>
+        <div class="timeline-item" data-reveal>
+            <span class="timeline-date">Milan</span>
+            <h3>Directeur Artistique & Ingénieur Ducal</h3>
+            <p>Conception de systèmes hydrauliques et scénographies immersives pour les fêtes de cour.</p>
+        </div>
+        <div class="timeline-item" data-reveal>
+            <span class="timeline-date">Le Louvre</span>
+            <h3>Chef-d'œuvre Ultime</h3>
+            <p>Finalisation de la Joconde : étude poussée sur le sfumato et l'optique humaine.</p>
+        </div>
+        <div class="timeline-item" data-reveal>
+            <span class="timeline-date">Futur</span>
+            <h3>Projet : Mars Ornithopter</h3>
+            <p>Adapter mes croquis de vis aérienne pour l'atmosphère martienne via des simulations IA.</p>
+        </div>
+    </div>
+</section>
+
+<section id="engine">
+    <h2 style="text-align: center; font-family: 'Bungee'; margin-bottom: 50px;">Arsenal de Compétences</h2>
+    <div class="invention-track" id="trackArea">
+        <div class="flying-machine" id="machine">🦅</div>
+        <div class="skill-card" data-reveal><h3>🎨 SFUMATO & OPTIQUE</h3><p>Maîtrise des ombres portées et de la transition invisible des couleurs.</p></div>
+        <div class="skill-card" data-reveal><h3>⚙️ DESIGN INDUSTRIEL</h3><p>Automates, engrenages complexes et vis sans fin.</p></div>
+        <div class="skill-card" data-reveal><h3>🧬 ANATOMIE COMPARÉE</h3><p>Analyse de la structure musculaire et biomimétisme.</p></div>
+        <div class="skill-card" data-reveal><h3>🖥️ IA GÉNÉRATIVE</h3><p>Prompt Engineering basé sur 500 ans de croquis et de théories.</p></div>
+    </div>
+</section>
+
+<section id="contact">
+    <div class="contact-card" data-reveal>
+        <h2 style="font-family: 'Playfair Display'; text-align: center; margin-bottom: 30px;">Sceller une Alliance</h2>
+        <p style="text-align: center; margin-bottom: 30px; font-style: italic;">Pour toute collaboration stratégique ou demande de portrait.</p>
+        <div style="display: flex; flex-direction: column; gap: 15px;">
+            <input type="text" placeholder="Votre Nom / Maison" style="width: 100%; padding: 15px; border: 1px solid var(--primary); background: transparent;">
+            <textarea placeholder="Votre message pour la postérité..." rows="5" style="width: 100%; padding: 15px; border: 1px solid var(--primary); background: transparent;"></textarea>
+            <button style="background: var(--primary); color: white; border: none; padding: 20px; font-family: 'Bungee'; cursor: none;">Envoyer la missive</button>
+        </div>
+        <div style="margin-top: 30px; display: flex; justify-content: center; gap: 20px; font-size: 1.5rem;">
+            <i class="fab fa-instagram"></i>
+            <i class="fab fa-linkedin"></i>
+            <i class="fab fa-twitter"></i>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <p>MANUSCRIT NUMÉRIQUE — MCM LII <br> © 2026 LEONARDO DA VINCI STUDIO</p>
+</footer>
+
+<script>
+    // Curseur et taches d'encre
+    const cursor = document.getElementById('magic-cursor');
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+        
+        if(Math.random() > 0.95) { // Effet tache d'encre aléatoire
+            const ink = document.createElement('div');
+            ink.className = 'ink-splat';
+            ink.style.left = e.clientX + 'px';
+            ink.style.top = e.clientY + 'px';
+            document.body.appendChild(ink);
+            setTimeout(() => ink.remove(), 1000);
+        }
+    });
+
+    // Theme Toggle (Bougie)
+    const themeBtn = document.getElementById('themeBtn');
+    themeBtn.addEventListener('click', () => {
+        document.body.classList.toggle('day-mode');
+        themeBtn.innerText = document.body.classList.contains('day-mode') ? '☀️' : '🕯️';
+    });
+
+    // Animation Machine Volante (Suivi du scroll)
+    const machine = document.getElementById('machine');
+    const skillCards = document.querySelectorAll('.skill-card');
+    const trackArea = document.getElementById('trackArea');
+
+    window.addEventListener('scroll', () => {
+        const rect = trackArea.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+            const scrollPercent = Math.min(Math.max((window.innerHeight - rect.top) / rect.height, 0), 1);
+            const targetPos = (rect.height * scrollPercent) * 0.8;
+            machine.style.top = targetPos + "px";
+            machine.style.transform = `rotate(${Math.sin(Date.now()/200)*10 + 90}deg)`;
+        }
+    });
+
+    // Reveal Observer
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('[data-reveal], .skill-card').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
